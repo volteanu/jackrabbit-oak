@@ -21,6 +21,7 @@ package org.apache.jackrabbit.oak.segment.file;
 
 import javax.annotation.Nonnull;
 
+import org.apache.jackrabbit.oak.segment.compaction.report.GCReport;
 import org.apache.jackrabbit.oak.segment.file.tar.GCGeneration;
 import org.apache.jackrabbit.oak.spi.gc.GCMonitor;
 

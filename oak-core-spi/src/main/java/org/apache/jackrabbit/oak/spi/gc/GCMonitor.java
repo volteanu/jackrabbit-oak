@@ -77,6 +77,12 @@ public interface GCMonitor {
      */
     void updateStatus(String status);
 
+    /**
+     * The garbage collection finished and a new report is available
+     * @param report details of the completed compaction
+     */
+    void updateReport(String report);
+
     class Empty implements GCMonitor {
         @Override public void info(String message, Object[] arguments) { }
         @Override public void warn(String message, Object[] arguments) { }
@@ -85,5 +91,6 @@ public interface GCMonitor {
         @Override public void compacted() { }
         @Override public void cleaned(long reclaimedSize, long currentSize) { }
         @Override public void updateStatus(String status) { }
+        @Override public void updateReport(String status) { }
     }
 }

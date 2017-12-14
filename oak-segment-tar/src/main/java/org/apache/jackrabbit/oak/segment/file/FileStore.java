@@ -84,6 +84,8 @@ import org.apache.jackrabbit.oak.segment.SegmentNotFoundExceptionListener;
 import org.apache.jackrabbit.oak.segment.SegmentWriter;
 import org.apache.jackrabbit.oak.segment.WriterCacheManager;
 import org.apache.jackrabbit.oak.segment.compaction.SegmentGCOptions;
+import org.apache.jackrabbit.oak.segment.compaction.report.GCReport;
+import org.apache.jackrabbit.oak.segment.compaction.report.GCReportBuilder;
 import org.apache.jackrabbit.oak.segment.file.GCJournal.GCJournalEntry;
 import org.apache.jackrabbit.oak.segment.file.ShutDown.ShutDownCloser;
 import org.apache.jackrabbit.oak.segment.file.tar.CleanupContext;
@@ -579,6 +581,9 @@ public class FileStore extends AbstractFileStore {
 
         private volatile boolean cancelled;
 
+        @Nonnull
+        private final GCReportBuilder gcReport = new GCReportBuilder();
+
         /**
          * Timestamp of the last time {@link #fullGC()} or {@link #tailGC()} was
          * successfully invoked. 0 if never.
@@ -625,10 +630,16 @@ public class FileStore extends AbstractFileStore {
             try {
                 gcListener.info("TarMK GC #{}: started", GC_COUNT.incrementAndGet());
 
+                gcReport.started()
+                        .gcCount(GC_COUNT.get());
+
                 long dt = System.currentTimeMillis() - lastSuccessfullGC;
                 if (dt < GC_BACKOFF) {
                     gcListener.skipped("TarMK GC #{}: skipping garbage collection as it already ran " +
                             "less than {} hours ago ({} s).", GC_COUNT, GC_BACKOFF/3600000, dt/1000);
+
+                    gcReport.result(GCReport.Result.SKIPPED);
+
                     return;
                 }
 
@@ -678,6 +689,7 @@ public class FileStore extends AbstractFileStore {
             } finally {
                 compactionMonitor.finished();
                 gcListener.updateStatus(IDLE.message());
+                gcListener.updateReport(gcReport.build().toString());
             }
         }
 

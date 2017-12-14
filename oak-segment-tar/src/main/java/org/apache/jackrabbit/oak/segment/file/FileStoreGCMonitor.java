@@ -19,17 +19,16 @@
 
 package org.apache.jackrabbit.oak.segment.file;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.slf4j.helpers.MessageFormatter.arrayFormat;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import javax.annotation.Nonnull;
-
 import org.apache.jackrabbit.oak.segment.compaction.SegmentGCStatus;
 import org.apache.jackrabbit.oak.spi.gc.GCMonitor;
 import org.apache.jackrabbit.oak.stats.Clock;
+
+import javax.annotation.Nonnull;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.slf4j.helpers.MessageFormatter.arrayFormat;
 
 /**
  * {@link GCMonitor} implementation providing the file store gc status.
@@ -43,6 +42,7 @@ public class FileStoreGCMonitor implements GCMonitor {
     private long lastReclaimedSize;
     private String lastError;
     private String lastLogMessage;
+    private String lastReport;
     private String status = SegmentGCStatus.IDLE.message();
 
     public FileStoreGCMonitor(@Nonnull Clock clock) {
@@ -85,10 +85,16 @@ public class FileStoreGCMonitor implements GCMonitor {
         lastReclaimedSize = reclaimed;
         lastRepositorySize = current;
     }
+
     
     @Override
     public void updateStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public void updateReport(String report) {
+        this.lastReport = report;
     }
 
     public long getLastCompaction() {
@@ -109,6 +115,10 @@ public class FileStoreGCMonitor implements GCMonitor {
 
     public String getLastError() {
         return lastError;
+    }
+
+    public String getLastReport() {
+        return lastReport;
     }
 
     @Nonnull

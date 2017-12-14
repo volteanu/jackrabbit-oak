@@ -124,6 +124,11 @@ public interface SegmentRevisionGC {
     long getLastCompaction();
 
     /**
+     * @return detailed report of the last compaction
+     */
+    String getLastReport();
+
+    /**
      * @return  time of the last cleanup in milliseconds.
      */
     long getLastCleanup();

@@ -819,6 +819,11 @@ public class SegmentCompactionIT {
             delegate.updateStatus(status);
         }
 
+        @Override
+        public void updateReport(String report) {
+            delegate.updateReport(report);
+        }
+
         public boolean isCleaned() {
             return cleaned;
         }

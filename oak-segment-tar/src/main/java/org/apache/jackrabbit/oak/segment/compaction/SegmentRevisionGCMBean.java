@@ -139,6 +139,12 @@ public class SegmentRevisionGCMBean
         return fileStoreGCMonitor.getLastCompaction();
     }
 
+    @CheckForNull
+    @Override
+    public String getLastReport() {
+        return fileStoreGCMonitor.getLastReport();
+    }
+
     @Override
     public long getLastCleanup() {
         return fileStoreGCMonitor.getLastCleanup();

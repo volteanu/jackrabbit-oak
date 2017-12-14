@@ -118,4 +118,11 @@ public class DelegatingGCMonitor implements GCMonitor {
         }
     }
 
+    @Override
+    public void updateReport(String report) {
+        for (GCMonitor gcMonitor : gcMonitors) {
+            gcMonitor.updateReport(report);
+        }
+    }
+
 }

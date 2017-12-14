@@ -71,4 +71,9 @@ public class LoggingGCMonitor implements GCMonitor {
     public void updateStatus(String status) {
         
     }
+
+    @Override
+    public void updateReport(String report) {
+        log.info(report);
+    }
 }
